@@ -6,7 +6,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState('');
 
-  const API_URL = "https://mern-taskpro-2.onrender.com/api/tasks";
+  const API_URL = "https://mern-taskpro-2.onrender.com";
 
   const fetchTasks = async () => {
     try {
