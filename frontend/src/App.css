@@ -1,0 +1,82 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  min-height: 100vh;
+}
+
+.app-main-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-top: 80px;
+}
+
+.app-container {
+  background: white;
+  width: 90%;
+  max-width: 480px;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+}
+
+header h1 { margin: 0; color: #1a1a1a; font-size: 26px; font-weight: 800; }
+header p { color: #7f8c8d; font-size: 14px; margin-bottom: 25px; }
+
+.input-group { display: flex; gap: 10px; margin-bottom: 30px; }
+
+input {
+  flex: 1;
+  padding: 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  outline: none;
+}
+
+.add-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0 25px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.task-list { display: flex; flex-direction: column; gap: 12px; }
+
+.task-item {
+  background: #ffffff;
+  padding: 16px 20px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #f0f0f0;
+  /* Isse button overlap nahi hoga */
+  position: relative; 
+}
+
+.task-text { color: #333; font-size: 15px; font-weight: 500; flex: 1; }
+
+.delete-btn {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  /* Button ko top layer par laane ke liye */
+  cursor: pointer !important;
+  position: relative;
+  z-index: 999;
+  pointer-events: auto;
+}
+
+.delete-btn:hover { background: #d9363e; }
+.empty-msg { color: #95a5a6; font-style: italic; margin-top: 30px; text-align: center; }
