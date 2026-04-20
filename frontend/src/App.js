@@ -6,72 +6,68 @@ function App() {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
 
-  // Apni Backend URL yahan check kar lena
-  const API_URL = "https://mern-taskpro-final.vercel.app/api/tasks"; 
+  // UPDATE: Apni backend URL yahan dalo
+  const API_URL = "https://mern-taskpro-final.vercel.app/api/tasks";
 
   useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const res = await axios.get(API_URL);
+        setTasks(res.data);
+      } catch (err) { console.log("Fetch error:", err); }
+    };
     fetchTasks();
   }, []);
 
-  const fetchTasks = async () => {
-    try {
-      const res = await axios.get(API_URL);
-      setTasks(res.data);
-    } catch (err) { console.log(err); }
-  };
-
-  const addTask = async () => {
+  const handleAdd = async (e) => {
+    e.preventDefault(); // Sabse important line: Page reload nahi hoga
     if (!task) return;
-    
-    // Date/Day Logic (Monday, 20 Apr)
+
     const options = { weekday: 'long', day: 'numeric', month: 'short' };
     const dateToday = new Date().toLocaleDateString('en-IN', options);
 
     try {
-      const res = await axios.post(API_URL, {
-        text: task,
-        date: dateToday
-      });
+      const res = await axios.post(API_URL, { text: task, date: dateToday });
       setTasks([...tasks, res.data]);
       setTask("");
-    } catch (err) { 
-      alert("Backend terminal check karo!"); 
+    } catch (err) {
+      alert("Error: Backend se connection nahi ho raha!");
     }
   };
 
-  const deleteTask = async (id) => {
+  const handleDelete = async (id) => {
     try {
       await axios.delete(`${API_URL}/${id}`);
       setTasks(tasks.filter(t => t._id !== id));
-    } catch (err) { console.log(err); }
+    } catch (err) { console.log("Delete error:", err); }
   };
 
   return (
-    <div className="main-container">
-      <div className="task-box">
-        <h1 className="title">My TaskPro 🚀</h1>
-        <p className="subtitle">Aaj ke tasks manage karein</p>
+    <div className="main-wrapper">
+      <div className="task-box-clean">
+        <h1>My TaskPro 🚀</h1>
+        <p className="sub-text">Aaj ke tasks manage karein</p>
         
-        <div className="input-section">
+        <form className="input-row" onSubmit={handleAdd}>
           <input 
             type="text"
             value={task} 
             onChange={(e) => setTask(e.target.value)} 
             placeholder="Kuch naya likho..." 
           />
-          <button className="add-button" onClick={addTask}>Add</button>
-        </div>
+          <button type="submit" className="btn-add">Add</button>
+        </form>
         
-        <div className="task-container">
-          {tasks.length > 0 ? tasks.map((t) => (
-            <div key={t._id} className="task-card">
-              <div className="text-area">
-                <p className="task-val">{t.text}</p>
-                <span className="task-time">{t.date}</span>
+        <div className="list-container">
+          {tasks.map((t) => (
+            <div key={t._id} className="task-row">
+              <div className="content">
+                <span className="task-name">{t.text}</span>
+                <span className="task-dt">{t.date}</span>
               </div>
-              <button className="del-btn" onClick={() => deleteTask(t._id)}>Delete</button>
+              <button onClick={() => handleDelete(t._id)} className="btn-del">Delete</button>
             </div>
-          )) : <p className="no-task">Koi task nahi hai! 😎</p>}
+          ))}
         </div>
       </div>
     </div>
