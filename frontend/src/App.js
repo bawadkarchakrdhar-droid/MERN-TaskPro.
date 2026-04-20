@@ -3,80 +3,49 @@ import axios from 'axios';
 import './App.css';
 
 function App() {
+  const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
-  const [title, setTitle] = useState('');
 
-  const API_URL = "https://mern-taskpro-2.onrender.com/api/tasks";
-
-  const fetchTasks = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/all`);
-      setTasks(res.data);
-    } catch (err) {
-      console.error("Fetch error", err);
-    }
+  // Date and Day Logic
+  const getCurrentDate = () => {
+    const options = { weekday: 'long', day: 'numeric', month: 'short' };
+    return new Date().toLocaleDateString('en-IN', options);
   };
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
 
   const addTask = async () => {
-    if (!title.trim()) return;
+    if (!task) return;
     try {
-      await axios.post(`${API_URL}/add`, { title });
-      setTitle('');
-      fetchTasks();
+      const res = await axios.post('TERI_BACKEND_URL/api/tasks', {
+        text: task,
+        date: getCurrentDate() // Yahan se date bhej rahe hain
+      });
+      setTasks([...tasks, res.data]);
+      setTask("");
     } catch (err) {
-      alert("Network Error: Backend terminal check karo!");
-    }
-  };
-
-  const deleteTask = async (taskId) => {
-    try {
-      // Direct call with the MongoDB _id
-      await axios.delete(`${API_URL}/${taskId}`);
-      fetchTasks(); 
-    } catch (err) {
-      alert("Delete failed! Check if server is running.");
-      console.error("Delete Error:", err);
+      console.error("Error adding task", err);
     }
   };
 
   return (
-    <div className="app-main-wrapper">
-      <div className="app-container">
-        <header>
-          <h1>My TaskPro 🚀</h1>
-          <p>Aaj ke tasks manage karein</p>
-        </header>
-        
+    <div className="container">
+      <div className="glass-card">
+        <h1>My TaskPro 🚀</h1>
         <div className="input-group">
           <input 
-            value={title} 
-            onChange={(e) => setTitle(e.target.value)} 
-            placeholder="Kuch naya likho..." 
-            onKeyPress={(e) => e.key === 'Enter' && addTask()}
+            value={task} 
+            onChange={(e) => setTask(e.target.value)} 
+            placeholder="Add a new task..." 
           />
-          <button className="add-btn" onClick={addTask}>Add</button>
+          <button onClick={addTask}>Add</button>
         </div>
-
+        
         <div className="task-list">
-          {tasks.length > 0 ? (
-            tasks.map(task => (
-              <div key={task._id} className="task-item">
-                <span className="task-text">{task.title}</span>
-                <button 
-                  className="delete-btn" 
-                  onClick={() => deleteTask(task._id)}
-                >
-                  Delete
-                </button>
-              </div>
-            ))
-          ) : (
-            <p className="empty-msg">Koi task nahi hai! 😎</p>
-          )}
+          {tasks.length > 0 ? tasks.map((t, index) => (
+            <div key={index} className="task-item">
+              <p className="task-text">{t.text}</p>
+              <span className="task-date">{t.date}</span>
+            </div>
+          )) : <p>Koi task nahi hai! 😎</p>}
         </div>
       </div>
     </div>
