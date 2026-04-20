@@ -7,7 +7,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState("");
 
-  const API_URL = "https://mern-taskpro-final.vercel.app/api/tasks";
+  const API_URL = "https://mern-taskpro-2.onrender.com";
 
   useEffect(() => {
     fetchTasks();
